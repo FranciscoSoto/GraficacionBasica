@@ -197,7 +197,7 @@
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
         mat4.identity(mvMatrix);
-        mat4.translate(mvMatrix, [-3.0, 3.0, -20.0]);
+        mat4.translate(mvMatrix, [-3.0, 0.0, -10.0]);
         mvPushMatrix();
         mat4.rotate(mvMatrix, degToRad(rTri), [0,1,0]);
        
