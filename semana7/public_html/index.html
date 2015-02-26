@@ -2,35 +2,35 @@
 
 <head>
 <title>Aprende webGL &mdash; Leccion 1</title>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
 
 <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
 
 <script id="shader-fs" type="x-shader/x-fragment">
-    #ifdef GL_ES
-    precision highp float;
-    #endif
-    
-    varying vec2 vTextureCoord;
-    uniform sampler2D uSampler;//color que se ira a imprimir
-    
-    void main(void) {
-        //gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-        gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t)); //color de fragmentacion
-    }
+     #ifdef GL_ES
+     precision highp float;
+     #endif
+
+     varying vec2 vTextureCoord;
+     uniform sampler2D uSampler;
+
+     void main(void) {
+         gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+      }
 </script>
 
 <script id="shader-vs" type="x-shader/x-vertex">
     attribute vec3 aVertexPosition;
     attribute vec2 aTextureCoord;
-    
+
     uniform mat4 uMVMatrix;
     uniform mat4 uPMatrix;
-    
+
     varying vec2 vTextureCoord;
+
     void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vTextureCoord = aTextureCoord; //semana6
+    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+    vTextureCoord = aTextureCoord;
     }
 </script>
 
@@ -124,21 +124,21 @@
         gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
     }
 
-    
     var triangleVertexColorBuffer;
     var squareVertexColorBuffer;
     var hexagonoVertexColorBuffer;
     
-
+    //var triangleVertexTextureCoordBuffer;
     var triangleVertexPositionBuffer;
     var squareVertexPositionBuffer;
     var hexagonoVertexPositionBuffer;
 
     function initBuffers() {
+
         triangleVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
-        
-        var vertices = [                                                            
+        var vertices = [  
+            
              5.0, -1.0, 5.0, 
             -5.0, -1.0, 5.0, 
              5.0, -1.0, -5.0, 
@@ -149,115 +149,170 @@
              0.0,  5.0,  0.0,
              5.0, -1.0,  5.0,
              5.0, -1.0, -5.0
+       
+
+
+          
+             
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         triangleVertexPositionBuffer.itemSize = 3;
         triangleVertexPositionBuffer.numItems = 10;
         
-        triangleVertexTextureCoordBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER,triangleVertexTextureCoordBuffer);
-        var textureCoords = [
-
-            0.0, 0.0, 
-            1.0, 0.0, 
-            1.0, 1.0, 
-            0.0, 1.0, 
+       /* triangleVertexColorBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER,triangleVertexColorBuffer);
+        var colors = [
+            0.0, 1.0, 0.0, 1.0,
+            1.0, 0.0, 0.0, 1.0,
+            0.0, 0.0, 0.0, 1.0,
+            1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 0.0, 1.0,
+            0.0, 1.0, 1.0, 1.0,
+            0.0, 0.0, 1.0, 1.0,
+            0.0, 0.3, 1.0, 1.0,
+            0.0, 1.0, 0.2, 1.0,
+            1.0, 0.0, 1.0, 1.0,
+            0.8, 0.4, 0.0, 1.0,
+            0.0, 0.9, 0.8, 1.0
             
-            1.0, 0.0, 
-            1.0, 1.0, 
-            1.0, 1.0, 
-            0.0, 0.0, 
-            
- 
         ]
-        gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(textureCoords),gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(colors),gl.STATIC_DRAW);
+        triangleVertexColorBuffer.itemSize = 4;
+        triangleVertexColorBuffer.numItems = 12;*/
+       triangleVertexTextureCoordBuffer = gl.createBuffer();
+       gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexTextureCoordBuffer);
+       var textureCoords = [
+         // Front face
+          0.0, 0.0,
+          1.0, 0.0,
+          1.0, 1.0,
+          0.0, 1.0,
+
+         // Back face
+         1.0, 0.0,
+         1.0, 1.0,
+         0.0, 1.0,
+         0.0, 0.0,
+
+         // Top face
+         0.0, 1.0,
+         0.0, 0.0,
+         1.0, 0.0,
+         1.0, 1.0,
+
+         // Bottom face
+         //1.0, 1.0,
+         //0.0, 1.0,
+         //0.0, 0.0,
+         //1.0, 0.0,
+
+         // Right face
+         //1.0, 0.0,
+         //1.0, 1.0,
+         //0.0, 1.0,
+         //0.0, 0.0,
+
+         // Left face
+         //0.0, 0.0,
+         //1.0, 0.0,
+         //1.0, 1.0,
+         //0.0, 1.0,
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
         triangleVertexTextureCoordBuffer.itemSize = 2;
-        triangleVertexTextureCoordBuffer.numItems = 8;
+        triangleVertexTextureCoordBuffer.numItems = 12;
         
         squareVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
         vertices = [
-             0.0,  3.0,  0.0,
-            -2.0,  2.0,  0.0,
-             2.0, -2.0,  0.0,
-            -2.0, -2.0,  0.0
+             2.5,  2.5,  0.0,
+            -2.5,  2.5,  0.0,
+             2.5, -2.5,  0.0,
+            -2.5, -2.5,  0.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         squareVertexPositionBuffer.itemSize = 3;
         squareVertexPositionBuffer.numItems = 4;
-       
-        
     }
     
-         var xRot = 0;
-         var yRot =0;
-         var zRot =0;
-    function drawScene() {
-        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    var xRot = 0;
+    var yRot = 0;
+    var zRot = 0;
 
+    function drawScene() {
+        gl.viewport(1, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        
         mat4.perspective(40, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
         mat4.identity(mvMatrix);
-        
-        mat4.translate(mvMatrix, [-3.0, -3.0, -25.0]);
-        mat4.translate(pMatrix, [-8.0, 0.0, 0.0]);
-        
-        mvPushMatrix();
-        
-        mat4.rotate(mvMatrix, degToRad(rTri), [1, 1, 0]);
-       
+        mat4.translate(mvMatrix, [-1.0, -3.0, -30.0]);
+        mat4.translate(pMatrix,[-8.0,0.0,0.0]);//semana6
+        //mat4.rotate(mvMatrix, degToRad(xRot), [1, 0, 0]);
+        //mat4.rotate(mvMatrix, degToRad(yRot), [0, 1, 0]);
+        //mat4.rotate(mvMatrix, degToRad(zRot), [0, 0, 1]);
+
+
+         
+       // mat4.translate(mvMatrix, [-3.0, 3.0, -20.0]);
+         mvPushMatrix();
+        mat4.rotate(mvMatrix, degToRad(rTri), [1,1,0]);
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, triangleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
         gl.bindBuffer(gl.ARRAY_BUFFER,triangleVertexTextureCoordBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexTextureCoordAttribute, triangleVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
-        
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D,neheTexture);
+        gl.bindTexture(gl.TEXTURE_2D, neheTexture);
         gl.uniform1i(shaderProgram.samplerUniform, 0);
-        
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, triangleVertexPositionBuffer.numItems);
         
-        mvPopMatrix();
-        
-        ////Pentagono
+        //gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
+        //gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, traingleVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-        mat4.translate(mvMatrix, [6.0, 0.0, -20.0]);
-        mvPushMatrix();//semana4
+        //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, triangleVertexIndexBuffer);
+        //setMatrixUniforms();
+        //gl.drawElements(gl.TRIANGLE_STRIP, triangleVertexIndexBuffer.numItems);
         
-        mat4.rotate(mvMatrix, degToRad(rTri), [0, 0, 1]);
-        
+
+
+        mvPopMatrix();
+        //mvPushMatrix();
+        //mat4.rotate(mvMatrix, degToRad(rcua), [0,1,1]);
+         mat4.translate(mvMatrix, [12.0, 2.0, 16.0]);
         gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
         setMatrixUniforms();
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
-        mvPopMatrix();
+         //mvPopMatrix();
+
     }
-        function handleLoadedTexture(texture) {
+
+    function handleLoadedTexture(texture) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.bindTexture(gl.TEXTURE_2D, null);
-  }
+    }
     var neheTexture;
     function initTexture() {
     neheTexture = gl.createTexture();
     neheTexture.image = new Image();
     neheTexture.image.onload = function() {
         handleLoadedTexture(neheTexture)
-    }
+       }
     neheTexture.image.src = "UPBC.gif";
-}
+    }
     
+
     function webGLStart() {
         var canvas = document.getElementById("leccion1-canvas");
         initGL(canvas);
         initShaders();
         initBuffers();
-        initTexture();   ///semana6
+        initTexture();
 
         gl.clearColor(0.7, 0.0, 0.9, 1.0);
         gl.enable(gl.DEPTH_TEST);
@@ -272,7 +327,7 @@
         animate();
     }
     var rTri = 0;
-    var rcua=0;
+
     var lastTime = 0;
     
     function animate()
@@ -283,7 +338,7 @@
         {
             var elapsed = timeNow - lastTime;
             rTri += (90 * elapsed) / 1000.0;
-            rcua+=(90*elapsed) / 1000.0;
+
         }
         lastTime = timeNow;
     }
@@ -317,7 +372,7 @@
 
 <body onload="webGLStart();">
 
-    <canvas id="leccion1-canvas" style="border: none;" width="600" height="400"></canvas>
+    <canvas id="leccion1-canvas" style="border: none;" width="800" height="450"></canvas>
 
 </body>
 
